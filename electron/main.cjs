@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Notification, dialog, nativeImage } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { execFileSync } = require('node:child_process');
 const path = require('node:path');
+const fs = require('node:fs/promises');
 
 let mainWindow;
 function sendUpdate(payload) { mainWindow?.webContents.send('updates:status', payload); }
@@ -25,7 +26,7 @@ function configureUpdater() {
 function createWindow() {
   mainWindow = new BrowserWindow({ width: 1500, height: 940, minWidth: 1100, minHeight: 720, titleBarStyle: 'hiddenInset', backgroundColor: '#0b0d12', icon: path.join(__dirname, '../build/icon.png'), webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false } });
   mainWindow.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
-  if (!app.isPackaged) mainWindow.loadURL('http://localhost:5173');
+  if (!app.isPackaged) mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173');
   else mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 }
 
@@ -36,3 +37,28 @@ ipcMain.handle('updates:check', async () => {
   try { await autoUpdater.checkForUpdates(); } catch (e) { sendUpdate({ state: 'error', message: `No se pudo comprobar: ${e.message}` }); }
 });
 ipcMain.handle('updates:install', () => autoUpdater.quitAndInstall(false, true));
+ipcMain.handle('notification:show', (_, payload) => {
+  if (!Notification.isSupported()) return false;
+  new Notification({ title: payload?.title || 'Lorentasker', body: payload?.body || '', icon: path.join(__dirname, '../build/icon.png') }).show();
+  return true;
+});
+ipcMain.handle('profile:pick-avatar', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, { title: 'Elegir foto de perfil', properties: ['openFile'], filters: [{ name: 'Imágenes', extensions: ['png', 'jpg', 'jpeg', 'webp'] }] });
+  if (result.canceled || !result.filePaths[0]) return null;
+  const file = result.filePaths[0];
+  const image = nativeImage.createFromPath(file);
+  if (image.isEmpty()) return null;
+  const resized = image.resize({ width: 512, height: 512, quality: 'best' });
+  return `data:image/jpeg;base64,${resized.toJPEG(88).toString('base64')}`;
+});
+ipcMain.handle('data:export', async (_, payload) => {
+  const result = await dialog.showSaveDialog(mainWindow, { title: 'Exportar Lorentasker', defaultPath: `lorentasker-backup-${new Date().toISOString().slice(0, 10)}.json`, filters: [{ name: 'JSON', extensions: ['json'] }] });
+  if (result.canceled || !result.filePath) return null;
+  await fs.writeFile(result.filePath, JSON.stringify(payload, null, 2), 'utf8');
+  return result.filePath;
+});
+ipcMain.handle('data:import', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, { title: 'Importar copia de Lorentasker', properties: ['openFile'], filters: [{ name: 'JSON', extensions: ['json'] }] });
+  if (result.canceled || !result.filePaths[0]) return null;
+  return JSON.parse(await fs.readFile(result.filePaths[0], 'utf8'));
+});

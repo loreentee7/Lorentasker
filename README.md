@@ -11,6 +11,12 @@ Tu panel personal de productividad para organizar el trabajo diario como develop
 - Cuatro temas de color y densidad de interfaz configurable.
 - Registro e inicio de sesión completamente locales.
 - Datos y preferencias aislados para cada usuario del equipo.
+- Perfil editable con fotografía local optimizada.
+- Centro de notificaciones y avisos nativos de escritorio.
+- Temporizador de concentración con sesiones configurables.
+- Proyectos personalizables que se pueden crear, abrir y eliminar.
+- Edición completa de tareas y estimaciones de tiempo.
+- Copias de seguridad JSON mediante importación y exportación.
 - Persistencia privada en el equipo mediante almacenamiento local.
 - Aplicación Electron instalable en Windows.
 - Botón **Buscar actualizaciones** conectado a GitHub Releases.
