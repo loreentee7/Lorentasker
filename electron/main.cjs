@@ -24,7 +24,10 @@ function configureUpdater() {
 }
 
 function createWindow() {
-  mainWindow = new BrowserWindow({ width: 1500, height: 940, minWidth: 1100, minHeight: 720, titleBarStyle: 'hiddenInset', backgroundColor: '#0b0d12', icon: path.join(__dirname, '../build/icon.png'), webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false } });
+  mainWindow = new BrowserWindow({ width: 1500, height: 940, minWidth: 1100, minHeight: 720, ...(process.platform === 'win32' ? { frame: false } : { titleBarStyle: 'hiddenInset' }), backgroundColor: '#0b0d12', icon: path.join(__dirname, '../build/icon.png'), webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false } });
+  const sendWindowState = () => mainWindow?.webContents.send('window:maximized', mainWindow.isMaximized());
+  mainWindow.on('maximize', sendWindowState);
+  mainWindow.on('unmaximize', sendWindowState);
   mainWindow.webContents.setWindowOpenHandler(({ url }) => { shell.openExternal(url); return { action: 'deny' }; });
   if (!app.isPackaged) mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173');
   else mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
@@ -37,6 +40,15 @@ ipcMain.handle('updates:check', async () => {
   try { await autoUpdater.checkForUpdates(); } catch (e) { sendUpdate({ state: 'error', message: `No se pudo comprobar: ${e.message}` }); }
 });
 ipcMain.handle('updates:install', () => autoUpdater.quitAndInstall(false, true));
+ipcMain.handle('window:minimize', event => BrowserWindow.fromWebContents(event.sender)?.minimize());
+ipcMain.handle('window:toggle-maximize', event => {
+  const window = BrowserWindow.fromWebContents(event.sender);
+  if (!window) return false;
+  window.isMaximized() ? window.unmaximize() : window.maximize();
+  return window.isMaximized();
+});
+ipcMain.handle('window:close', event => BrowserWindow.fromWebContents(event.sender)?.close());
+ipcMain.handle('window:is-maximized', event => BrowserWindow.fromWebContents(event.sender)?.isMaximized() || false);
 ipcMain.handle('notification:show', (_, payload) => {
   if (!Notification.isSupported()) return false;
   new Notification({ title: payload?.title || 'Lorentasker', body: payload?.body || '', icon: path.join(__dirname, '../build/icon.png') }).show();

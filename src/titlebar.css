@@ -1,0 +1,17 @@
+/* Ventana integrada de Lorentasker para sustituir el marco nativo de Windows. */
+.app.with-titlebar { grid-template-rows: 40px minmax(0, 1fr); }
+.app.with-titlebar > .sidebar, .app.with-titlebar > main { grid-row: 2; }
+.window-titlebar { height: 40px; grid-column: 1 / -1; grid-row: 1; position: relative; z-index: 50; display: flex; align-items: center; border-bottom: 1px solid #20242d; background: linear-gradient(180deg, #11141b, #0d1016); color: #9da3af; user-select: none; -webkit-app-region: drag; }
+.window-title { height: 100%; display: flex; align-items: center; gap: 8px; padding-left: 12px; white-space: nowrap; }
+.window-title img { width: 20px; height: 20px; border-radius: 6px; }
+.window-title strong { color: #e7e9ed; font: 700 11px Manrope; }
+.window-title span { padding-left: 8px; border-left: 1px solid #292e38; color: #5d6471; font-size: 9px; }
+.window-drag-space { flex: 1; height: 100%; }
+.window-controls { height: 100%; display: flex; -webkit-app-region: no-drag; }
+.window-controls button { width: 47px; height: 100%; display: grid; place-items: center; border: 0; border-left: 1px solid rgb(255 255 255 / 2.5%); border-radius: 0; appearance: none; -webkit-appearance: none; background: transparent !important; color: #858c99; transition: background .15s, color .15s; }
+.window-controls button:hover { background: #1b1f28 !important; color: #fff; }
+.window-controls .window-close:hover { background: #e5484d !important; color: #fff; }
+.window-controls svg { width: 14px; height: 14px; stroke-width: 1.7; }
+.auth-shell.with-titlebar { min-height: 100vh; padding-top: 40px; }
+.auth-shell.with-titlebar > .window-titlebar { position: absolute; inset: 0 0 auto; width: 100%; }
+@media (max-width: 850px) { .app.with-titlebar { display: grid; grid-template-columns: 1fr; } }
