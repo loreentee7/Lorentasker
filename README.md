@@ -9,6 +9,8 @@ Tu panel personal de productividad para organizar el trabajo diario como develop
 - Tareas con proyecto, prioridad, fecha, hora y estado.
 - Notas rápidas, proyectos y estadísticas.
 - Cuatro temas de color y densidad de interfaz configurable.
+- Registro e inicio de sesión completamente locales.
+- Datos y preferencias aislados para cada usuario del equipo.
 - Persistencia privada en el equipo mediante almacenamiento local.
 - Aplicación Electron instalable en Windows.
 - Botón **Buscar actualizaciones** conectado a GitHub Releases.
@@ -45,4 +47,6 @@ La plantilla `docs/release-workflow.yml` permite automatizar este proceso. Para 
 
 ## Privacidad
 
-Las tareas y notas se guardan localmente. Lorentasker no incluye analítica ni envía contenido a servidores externos.
+Las cuentas, tareas y notas se guardan localmente. Las contraseñas se derivan mediante PBKDF2 con SHA-256, 210.000 iteraciones y una salt aleatoria por usuario; nunca se guardan en texto plano. Cada usuario tiene su propio espacio aislado. Lorentasker no incluye analítica ni envía contenido a servidores externos.
+
+Las cuentas no se sincronizan entre dispositivos y desaparecerán si se eliminan los datos locales de la aplicación. Esta autenticación protege la separación cotidiana entre usuarios del mismo equipo, pero no sustituye al cifrado completo del disco frente a alguien con acceso administrativo al sistema.
