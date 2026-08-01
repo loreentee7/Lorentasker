@@ -41,6 +41,8 @@ Para repositorios privados, inicia la app con `GH_TOKEN` o `GITHUB_TOKEN` dispon
 3. Publica los artefactos como una release con tag `v<versión>`.
 4. Lorentasker detectará, descargará e instalará la nueva versión desde **Ajustes → Buscar actualizaciones**.
 
+La plantilla `docs/release-workflow.yml` permite automatizar este proceso. Para activarla, mueve el archivo a `.github/workflows/release.yml` usando una sesión de GitHub con scope `workflow`.
+
 ## Privacidad
 
 Las tareas y notas se guardan localmente. Lorentasker no incluye analítica ni envía contenido a servidores externos.
