@@ -1,0 +1,43 @@
+{
+  "name": "lorentasker",
+  "version": "1.0.0",
+  "description": "Dashboard personal de productividad para el trabajo diario en SZENDEX",
+  "author": "Lorenzo",
+  "license": "MIT",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "dist:win": "npm run build && electron-builder --win nsis --x64",
+    "dist:mac": "npm run build && electron-builder --mac dmg zip",
+    "release:win": "npm run build && electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "date-fns": "latest",
+    "electron-updater": "^6.8.9",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "concurrently": "latest",
+    "electron": "latest",
+    "electron-builder": "latest",
+    "wait-on": "latest"
+  },
+  "build": {
+    "appId": "com.lorente.lorentasker",
+    "productName": "Lorentasker",
+    "asar": true,
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "electron/**/*", "package.json"],
+    "icon": "build/icon.png",
+    "publish": [{ "provider": "github", "owner": "loreentee7", "repo": "Lorentasker", "releaseType": "release" }],
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "artifactName": "Lorentasker-Setup-${version}.${ext}" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true, "shortcutName": "Lorentasker", "installerIcon": "build/icon.ico", "uninstallerIcon": "build/icon.ico" },
+    "mac": { "target": ["dmg", "zip"], "category": "public.app-category.productivity" }
+  }
+}
