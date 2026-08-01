@@ -40,7 +40,7 @@ function App() {
   const [update, setUpdate] = useState({ state: 'idle', message: 'Buscar actualizaciones' });
   const today = new Date();
   const week = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(startOfWeek(today, { weekStartsOn: 1 }), i)), []);
-  useEffect(() => window.lorentasker?.onUpdateStatus(s => { setUpdate(s); setToast(s.message); }), []);
+  useEffect(() => { window.lorentasker?.onUpdateStatus(s => { setUpdate(s); setToast(s.message); }); }, []);
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(null), 4000); return () => clearTimeout(t); }, [toast]);
 
   const toggleTask = id => setTasks(tasks.map(t => t.id === id ? { ...t, done: !t.done } : t));
