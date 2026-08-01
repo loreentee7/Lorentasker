@@ -17,6 +17,7 @@ Tu panel personal de productividad para organizar el trabajo diario como develop
 - Proyectos personalizables que se pueden crear, abrir y eliminar.
 - Edición completa de tareas y estimaciones de tiempo.
 - Copias de seguridad JSON mediante importación y exportación.
+- Microinteracciones adaptadas de Amicro: transiciones entre vistas, entradas escalonadas, títulos desenfocados y elevación de tarjetas.
 - Persistencia privada en el equipo mediante almacenamiento local.
 - Aplicación Electron instalable en Windows.
 - Botón **Buscar actualizaciones** conectado a GitHub Releases.
@@ -56,3 +57,7 @@ La plantilla `docs/release-workflow.yml` permite automatizar este proceso. Para 
 Las cuentas, tareas y notas se guardan localmente. Las contraseñas se derivan mediante PBKDF2 con SHA-256, 210.000 iteraciones y una salt aleatoria por usuario; nunca se guardan en texto plano. Cada usuario tiene su propio espacio aislado. Lorentasker no incluye analítica ni envía contenido a servidores externos.
 
 Las cuentas no se sincronizan entre dispositivos y desaparecerán si se eliminan los datos locales de la aplicación. Esta autenticación protege la separación cotidiana entre usuarios del mismo equipo, pero no sustituye al cifrado completo del disco frente a alguien con acceso administrativo al sistema.
+
+## Animaciones
+
+Las microinteracciones de `src/components/amicro.jsx` adaptan los patrones `fade-up`, `scale-in`, `blur-text` y `card-hover` del registro [Amicro](https://github.com/Subhan-code/Amicro--Micro-transitions-), distribuido bajo licencia MIT. Se ejecutan mediante `framer-motion` y respetan la preferencia del sistema `prefers-reduced-motion`.
