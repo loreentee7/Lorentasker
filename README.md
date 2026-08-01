@@ -1,6 +1,6 @@
 # Lorentasker
 
-Tu panel personal de productividad para organizar el trabajo diario como developer en SZENDEX.
+Tu panel personal de productividad para organizar el trabajo diario como developer
 
 ## Qué incluye
 
